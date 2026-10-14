@@ -1,0 +1,56 @@
+name: GitHub Metrics
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # Setiap hari jam 00:00 UTC
+  push:
+    branches: [main]
+  workflow_dispatch:       # Bisa dijalankan manual dari tab Actions
+
+jobs:
+  github-metrics:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Generate Metrics
+        uses: lowlighter/metrics@latest
+        with:
+          # Token GitHub (buat di Settings > Developer > PAT, scope: read:user, repo)
+          token: ${{ secrets.METRICS_TOKEN }}
+
+          # Username GitHub kamu
+          user: SuygetsuVAL
+
+          # Nama file output SVG
+          filename: github-metrics.svg
+
+          # Template & tema
+          template: classic
+          base: header, activity, community, repositories, metadata
+
+          # --- Plugin: Kalender Isometrik 3D ---
+          plugin_isocalendar: yes
+          plugin_isocalendar_duration: full-year
+
+          # --- Plugin: Statistik Bahasa ---
+          plugin_languages: yes
+          plugin_languages_indepth: yes
+          plugin_languages_details: lines, bytes-size, percentage
+          plugin_languages_limit: 8
+          plugin_languages_analysis_timeout: 15
+
+          # --- Plugin: Kebiasaan Coding ---
+          plugin_habits: yes
+          plugin_habits_from: 200
+          plugin_habits_days: 14
+          plugin_habits_charts: yes
+          plugin_habits_trim: yes
+
+          # --- Plugin: Achievements ---
+          plugin_achievements: yes
+          plugin_achievements_threshold: B
+          plugin_achievements_secrets: yes
+          plugin_achievements_display: detailed
+          plugin_achievements_limit: 0
